@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.contrib.admin.views.decorators import staff_member_required
+from django.core.paginator import Paginator
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 
@@ -32,7 +34,6 @@ def view_form(request, uuid):
     raise Http404
 
 
-
 def list_forms(request):
     if not settings.DEBUG:
         raise Http404
@@ -43,3 +44,25 @@ def list_forms(request):
         forms.append(link_href.format(name=form.name, uuid=form.uuid))
 
     return HttpResponse('<br>'.join(forms))
+
+
+@staff_member_required
+def view_form_data(request, uuid):
+    saved_data = FormSavedData.objects.filter(form__uuid=uuid)
+    if len(saved_data) == 0:
+        return HttpResponse('Data is not yet added!')
+
+    data = [d.data for d in saved_data]
+    paginator = Paginator(data, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    keys = []
+    if page_obj.object_list:
+        keys = page_obj.object_list[0].keys()
+
+    context = {
+        'page_obj': page_obj,
+        'keys': keys,
+    }
+    return render(request, 'view_data.html', context=context)

@@ -15,11 +15,14 @@ def construct_form(form: Form):
             'initial': None,
             'widget': form_field.get_form_field_widget()
         }
+        if isinstance(form_field.get_form_field(), forms.CharField):
+            print('is char field')
+
         field = form_field.get_form_field()(**field_kwargs)
         form_fields_dict[form_field.name] = field
 
     if settings.DEBUG:
         print(form_fields_dict)
 
-    DynamicForm = type('DynamicForm', (forms.Form, ), form_fields_dict)
+    DynamicForm = type('DynamicForm', (forms.Form,), form_fields_dict)
     return DynamicForm

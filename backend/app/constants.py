@@ -35,7 +35,8 @@ FORM_FIELD_INPUTS = dict(FORM_FIELD_INPUTS)
 
 FORM_FIELD_WIDGETS = (
     (TEXT_INPUT, forms.TextInput),
-    (TEXT_AREA_INPUT, forms.Textarea)
+    (TEXT_AREA_INPUT, forms.Textarea),
+    (SINGLE_SELECT_INPUT, forms.RadioSelect),
 )
 
 FORM_FIELD_WIDGETS = dict(FORM_FIELD_WIDGETS)
