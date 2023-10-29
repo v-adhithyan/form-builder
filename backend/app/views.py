@@ -1,10 +1,45 @@
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
+from django.conf import settings
+from django.http import Http404, HttpResponse
+from django.shortcuts import get_object_or_404, render
 
-from .models import Form
+from .forms import construct_form
+from .models import Form, FormSavedData
 
 
 # Create your views here.
 def view_form(request, uuid):
     form = get_object_or_404(Form, uuid=uuid)
-    return HttpResponse(form.name)
+    if request.method == 'GET':
+        dynamic_form = construct_form(form)()
+        context = {
+            'name': form.name,
+            'form': dynamic_form,
+        }
+        return render(request, 'form.html', context=context)
+    elif request.method == 'POST':
+        dynamic_form = construct_form(form)(request.POST)
+        if dynamic_form.is_valid():
+            data = dynamic_form.cleaned_data
+            print(data)
+            FormSavedData.objects.create(form=form, data=data)
+            return HttpResponse('Thank you !')
+        context = {
+            'name': form.name,
+            'form': dynamic_form,
+        }
+        return render(request, 'form.html', context=context)
+
+    raise Http404
+
+
+
+def list_forms(request):
+    if not settings.DEBUG:
+        raise Http404
+
+    link_href = '<a href="/form/{uuid}">{name}</a>'
+    forms = []
+    for form in Form.objects.all():
+        forms.append(link_href.format(name=form.name, uuid=form.uuid))
+
+    return HttpResponse('<br>'.join(forms))

@@ -1,7 +1,7 @@
 import uuid
 from django.db import models
 
-from .constants import FORM_FIELD_CHOICES
+from .constants import FORM_FIELD_CHOICES, FORM_FIELD_INPUTS, FORM_FIELD_WIDGETS
 
 
 # Create your models here.
@@ -26,5 +26,16 @@ class FormFields(models.Model):
     max_length = models.PositiveIntegerField(default=0)
     # add validation
 
+    def get_form_field(self):
+        return FORM_FIELD_INPUTS[self.field_type]
+
+    def get_form_field_widget(self):
+        return FORM_FIELD_WIDGETS.get(self.field_type)
+
     def __str__(self):
         return f'{self.form.name} - {self.name} - {self.get_field_type_display()}'
+
+
+class FormSavedData(models.Model):
+    form = models.ForeignKey(Form, on_delete=models.DO_NOTHING)
+    data = models.JSONField(blank=False, null=False)
