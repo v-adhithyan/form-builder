@@ -1,15 +1,22 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import FormBuilder from './components/FormBuilder';
+import IndexPage from './components/index';
+import FormBuilder from './components/FormBuilder';  
+import FormList  from './components/FormList';
+import NewForm from './components/NewForm';
 import ThankYouPage from './components/ThankYou';
+import PublicForm from './components/PublicForn';
 
 function App() {
   return (
     <Router>
       <Routes>
-      <Route path="/" element={<div><h1><center>FormBuilder</center></h1><FormBuilder /></div>} />
+        <Route path="/" element={<IndexPage />} />
+        <Route path="/form/build/:id" element={<FormBuilder />} />
+        <Route path="/form" element={<FormList />} />
+        <Route path="/form/new" element={<NewForm />} />
         <Route path="/thank-you" element={<ThankYouPage />} />
-        {/* Add other routes as needed */}
+        <Route path="/public/form/:uuid" element={<PublicForm />} />
       </Routes>
     </Router>
   );

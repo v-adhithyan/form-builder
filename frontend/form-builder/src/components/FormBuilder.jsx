@@ -1,9 +1,11 @@
 // AdvancedFormBuilder.js
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './FormBuilder.css';
 import axios from 'axios';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { useParams, useNavigate } from 'react-router-dom';
+
 
 const initialField = {
   fieldType: 'text',
@@ -18,8 +20,37 @@ const initialField = {
 };
 
 const FormBuilder = ({ history }) => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [fieldData, setFieldData] = useState([]);
+  const [formData, setFormData] = useState({}); // Holds the data to be submitted
+
   const [fields, setFields] = useState([]);
   const [newField, setNewField] = useState({ ...initialField });
+
+  useEffect(() => {
+    const fetchForm = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/api/form/${id}/`);
+        if (response.status === 200) {
+          setFieldData(response.data); // Assuming the form fields are in the response data
+        } else {
+          navigate('/');
+          alert('Invalid form');
+        }
+      } catch (error) {
+        console.error('Error fetching form:', error);
+        navigate('/');
+        alert('Invalid form');
+      }
+    };
+
+    fetchForm();
+  }, [id, navigate]);
+  
+  const handleChange = (name, value) => {
+    setFormData({ ...formData, [name]: value });
+  };
 
   const addField = () => {
     setFields([...fields, { ...newField, order: fields.length + 1 }]);
@@ -70,7 +101,7 @@ const FormBuilder = ({ history }) => {
       }
 
       const fieldData = {
-        form: 1,
+        form: id,
         field_type: fieldTypeAbbreviation,
         label,
         name,
@@ -92,7 +123,7 @@ const FormBuilder = ({ history }) => {
       const response = await axios.post('http://localhost:8000/api/form/build/', payload);
       console.log(response.data);
       if (response.status === 201) {
-        history.push('/thank-you'); // Redirect to thank you page
+        window.location.href = '/thank-you';
       }     
       // TODO: Handle response
     } catch (error) {
