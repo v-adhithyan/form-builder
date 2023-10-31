@@ -15,7 +15,7 @@ class Form(models.Model):
 
 
 class FormFields(models.Model):
-    form = models.ManyToManyField(Form)
+    form = models.ForeignKey(Form, on_delete=models.PROTECT)
     field_type = models.CharField(max_length=2, choices=FORM_FIELD_CHOICES)
     label = models.CharField(max_length=100, blank=False, null=False)
     name = models.CharField(max_length=100, blank=False, null=False)
@@ -24,7 +24,7 @@ class FormFields(models.Model):
     is_required = models.BooleanField(default=True)
     min_length = models.PositiveIntegerField(default=0)
     max_length = models.PositiveIntegerField(default=0)
-    # add validation
+    choices = models.TextField(blank=True, null=True)
 
     def get_form_field(self):
         return FORM_FIELD_INPUTS[self.field_type]
