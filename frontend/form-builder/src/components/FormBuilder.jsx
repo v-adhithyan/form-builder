@@ -6,7 +6,6 @@ import axios from 'axios';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useParams, useNavigate } from 'react-router-dom';
 
-
 const initialField = {
   fieldType: 'text',
   label: '',
@@ -22,36 +21,36 @@ const initialField = {
 const FormBuilder = ({ history }) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [fieldData, setFieldData] = useState([]);
-  const [formData, setFormData] = useState({}); // Holds the data to be submitted
-
   const [fields, setFields] = useState([]);
   const [newField, setNewField] = useState({ ...initialField });
 
   useEffect(() => {
     const fetchForm = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/form/${id}/`);
+        const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/login');
+          return;
+        }
+        const response = await axios.get(`http://localhost:8000/api/form/${id}/`, {
+          headers: { 'Authorization': `Token ${token}` }
+        });
         if (response.status === 200) {
-          setFieldData(response.data); // Assuming the form fields are in the response data
+          // Assuming the form fields are in the response data
+          setFields(response.data.fields || []);
         } else {
           navigate('/');
           alert('Invalid form');
         }
       } catch (error) {
         console.error('Error fetching form:', error);
-        navigate('/');
-        alert('Invalid form');
+        navigate('/login');
       }
     };
 
     fetchForm();
   }, [id, navigate]);
   
-  const handleChange = (name, value) => {
-    setFormData({ ...formData, [name]: value });
-  };
-
   const addField = () => {
     setFields([...fields, { ...newField, order: fields.length + 1 }]);
     setNewField({ ...initialField });
@@ -76,6 +75,11 @@ const FormBuilder = ({ history }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      return;
+    }
     const payload = fields.map((field, index) => {
       const { fieldType, label, name, placeholder, isRequired, minLength, maxLength, choices } = field;
       let fieldTypeAbbreviation;
@@ -120,23 +124,21 @@ const FormBuilder = ({ history }) => {
     });
 
     try {
-      const response = await axios.post('http://localhost:8000/api/form/build/', payload);
-      console.log(response.data);
+      const response = await axios.post('http://localhost:8000/api/form/build/', payload, {
+        headers: { 'Authorization': `Token ${token}` }
+      });
       if (response.status === 201) {
         window.location.href = '/thank-you';
       }     
-      // TODO: Handle response
     } catch (error) {
       console.error('There was an error!', error);
-      // TODO: Handle error
+      navigate('/login');
     }
   };
-
 
   return (
     <div className="form-builder-container">
       <div className="form-controls">
-        {/* ...form control elements */}
         <select className="form-control" value={newField.fieldType} onChange={(e) => setNewField({ ...newField, fieldType: e.target.value })}>
           <option value="email">Email</option>
           <option value="text">Text</option>

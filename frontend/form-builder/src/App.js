@@ -6,6 +6,7 @@ import FormList  from './components/FormList';
 import NewForm from './components/NewForm';
 import ThankYouPage from './components/ThankYou';
 import PublicForm from './components/PublicForn';
+import LoginPage from './components/LoginPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/form/new" element={<NewForm />} />
         <Route path="/thank-you" element={<ThankYouPage />} />
         <Route path="/public/form/:uuid" element={<PublicForm />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </Router>
   );

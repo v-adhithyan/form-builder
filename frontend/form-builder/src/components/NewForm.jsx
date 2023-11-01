@@ -1,8 +1,7 @@
-// NewForm.js
 
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import apiCall from '../utils/api';
 
 const NewForm = () => {
   const [name, setName] = useState('');
@@ -12,7 +11,7 @@ const NewForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/api/form/', { name, description });
+      const response = await apiCall('post', 'form', { name, description });
       if (response.status === 201) {
         navigate('/form');
       }
@@ -23,7 +22,7 @@ const NewForm = () => {
 
   return (
     <div>
-      <h1>New Form</h1>
+      <center><h1>New Form</h1></center>
       <form onSubmit={handleSubmit}>
         <label>
           Name:

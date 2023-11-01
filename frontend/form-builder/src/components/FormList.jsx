@@ -1,8 +1,6 @@
-// FormList.js
-
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import apiCall from '../utils/api';
 
 const FormList = () => {
   const [forms, setForms] = useState([]);
@@ -10,7 +8,7 @@ const FormList = () => {
   useEffect(() => {
     const fetchForms = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/form/');
+        const response = await apiCall('get', 'form');
         setForms(response.data.results);
       } catch (error) {
         console.error('Error fetching forms:', error);
@@ -22,7 +20,7 @@ const FormList = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/api/form/${id}`);
+      await apiCall('delete', `form/${id}`);
       setForms(forms.filter(form => form.id !== id));
     } catch (error) {
       console.error('Error deleting form:', error);
