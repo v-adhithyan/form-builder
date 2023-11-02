@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-const apiUrl = 'http://localhost:8000/api';
+const apiUrl = `${process.env.REACT_APP_API_URL}/api`;
 
 const apiCall = async (method, endpoint, data = null, options = {}) => {
   endpoint = endpoint.endsWith('/') ? endpoint : endpoint + '/';  

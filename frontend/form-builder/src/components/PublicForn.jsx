@@ -15,7 +15,7 @@ const PublicForm = () => {
   useEffect(() => {
     const fetchFormFields = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/form/fields/${uuid}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/form/fields/${uuid}`);
         setFormInfo(response.data); // Assuming the API response has name, description, and fields
       } catch (error) {
         if (error.response && error.response.status === 404) {
@@ -37,7 +37,7 @@ const PublicForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`http://localhost:8000/api/public/form/${uuid}/submit/`, formData);
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/public/form/${uuid}/submit/`, formData);
       alert('Form submitted successfully');
       window.location.href = '/';
     } catch (error) {

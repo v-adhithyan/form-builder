@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import IndexPage from './components/index';
 import FormBuilder from './components/FormBuilder';  
 import FormList  from './components/FormList';
 import NewForm from './components/NewForm';

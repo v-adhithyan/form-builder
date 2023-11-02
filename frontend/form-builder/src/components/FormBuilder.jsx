@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import './FormBuilder.css';
 import axios from 'axios';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const initialField = {
@@ -32,7 +31,7 @@ const FormBuilder = ({ history }) => {
           navigate('/login');
           return;
         }
-        const response = await axios.get(`http://localhost:8000/api/form/${id}/`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/form/${id}/`, {
           headers: { 'Authorization': `Token ${token}` }
         });
         if (response.status === 200) {
@@ -59,18 +58,6 @@ const FormBuilder = ({ history }) => {
   const removeField = (index) => {
     const updatedFields = fields.filter((_, i) => i !== index);
     setFields(updatedFields);
-  };
-
-  const onDragEnd = (result) => {
-    if (!result.destination) {
-      return;
-    }
-
-    const items = Array.from(fields);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-
-    setFields(items);
   };
 
   const handleSubmit = async (e) => {
@@ -124,7 +111,7 @@ const FormBuilder = ({ history }) => {
     });
 
     try {
-      const response = await axios.post('http://localhost:8000/api/form/build/', payload, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/form/build/`, payload, {
         headers: { 'Authorization': `Token ${token}` }
       });
       if (response.status === 201) {

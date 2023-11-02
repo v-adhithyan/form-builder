@@ -18,14 +18,14 @@ const FormList = () => {
     fetchForms();
   }, []);
 
-  const handleDelete = async (id) => {
-    try {
-      await apiCall('delete', `form/${id}`);
-      setForms(forms.filter(form => form.id !== id));
-    } catch (error) {
-      console.error('Error deleting form:', error);
-    }
-  };
+  // const handleDelete = async (id) => {
+  //   try {
+  //     await apiCall('delete', `form/${id}`);
+  //     setForms(forms.filter(form => form.id !== id));
+  //   } catch (error) {
+  //     console.error('Error deleting form:', error);
+  //   }
+  // };
 
   return (
     <div style={{ margin: '20px' }}>
@@ -41,6 +41,7 @@ const FormList = () => {
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
             <Link to={`/form/build/${form.id}`} style={{ textDecoration: 'none', color: 'green' }}>Build</Link>
           </div>
+          <a href={`${process.env.REACT_APP_API_URL}/form/${form.uuid}/data`} target="_blank" rel="noopener noreferrer">View Data</a>
         </div>
       ))}
     </div>

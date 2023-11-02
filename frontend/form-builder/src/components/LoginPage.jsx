@@ -15,7 +15,7 @@ const LoginPage = () => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:8000/api/login/', {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/login/`, {
         username,
         password
       });
