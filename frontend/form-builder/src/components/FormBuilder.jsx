@@ -50,7 +50,7 @@ const FormBuilder = ({ history }) => {
 
     fetchForm();
   }, [id, navigate]);
-  
+
   const addField = () => {
     setFields([...fields, { ...newField, order: fields.length + 1 }]);
     setNewField({ ...initialField });
@@ -129,7 +129,7 @@ const FormBuilder = ({ history }) => {
       });
       if (response.status === 201) {
         window.location.href = '/thank-you';
-      }     
+      }
     } catch (error) {
       console.error('There was an error!', error);
       navigate('/login');
@@ -137,55 +137,48 @@ const FormBuilder = ({ history }) => {
   };
 
   return (
-    <div className="form-builder-container">
-      <div className="form-controls">
-        <select className="form-control" value={newField.fieldType} onChange={(e) => setNewField({ ...newField, fieldType: e.target.value })}>
-          <option value="email">Email</option>
-          <option value="text">Text</option>
-          <option value="phone_number">Phone Number</option>
-          <option value="radio">Radio</option>
-          <option value="multiple_choice">Multiple Choice</option>
-        </select>
-        <input className="form-control" type="text" placeholder="Label" value={newField.label} onChange={(e) => setNewField({ ...newField, label: e.target.value })} />
-        <input className="form-control" type="text" placeholder="Name" value={newField.name} onChange={(e) => setNewField({ ...newField, name: e.target.value })} />
-        <input className="form-control" type="text" placeholder="Placeholder" value={newField.placeholder} onChange={(e) => setNewField({ ...newField, placeholder: e.target.value })} />
-        <label>
-          <input type="checkbox" checked={newField.isRequired} onChange={(e) => setNewField({ ...newField, isRequired: e.target.checked })} />
-          Required
-        </label>
-        {newField.fieldType === 'text' && (
-          <>
-            <input className="form-control" type="number" placeholder="Min Length" value={newField.minLength} onChange={(e) => setNewField({ ...newField, minLength: e.target.value })} />
-            <input className="form-control" type="number" placeholder="Max Length" value={newField.maxLength} onChange={(e) => setNewField({ ...newField, maxLength: e.target.value })} />
-          </>
-        )}
-        {['radio', 'multiple_choice'].includes(newField.fieldType) && (
-          <input className="form-control" type="text" placeholder="Choices (comma separated)" value={newField.choices} onChange={(e) => setNewField({ ...newField, choices: e.target.value })} />
-        )}
-        <button className="add-btn" onClick={addField}>Add Field</button>
-      </div>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="fields">
-          {(provided) => (
-            <div className="form-preview" {...provided.droppableProps} ref={provided.innerRef}>
-              {fields.map((field, index) => (
-                <Draggable key={index} draggableId={String(index)} index={index}>
-                  {(provided) => (
-                    <div className="field-preview" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                      <div>Label: {field.label}</div>
-                      <div>Name: {field.name}</div>
-                      <div>Placeholder: {field.placeholder}</div>
-                      <button className="remove-btn" onClick={() => removeField(index)}>X</button>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
+    <div>
+      <h1><center>Form Builder</center></h1>
+      <div className="form-builder-container">
+        <div className="form-controls">
+          <select className="form-control" placeholder="Input type" value={newField.fieldType} onChange={(e) => setNewField({ ...newField, fieldType: e.target.value })}>
+            <option value="email">Email</option>
+            <option value="text">Text</option>
+            <option value="phone_number">Phone Number</option>
+            <option value="radio">Radio</option>
+            <option value="multiple_choice">Multiple Choice</option>
+          </select>
+          <input className="form-control" type="text" placeholder="Label" value={newField.label} onChange={(e) => setNewField({ ...newField, label: e.target.value })} />
+          <input className="form-control" type="text" placeholder="Name" value={newField.name} onChange={(e) => setNewField({ ...newField, name: e.target.value })} />
+          <input className="form-control" type="text" placeholder="Placeholder" value={newField.placeholder} onChange={(e) => setNewField({ ...newField, placeholder: e.target.value })} />
+          <label>
+            <input type="checkbox" checked={newField.isRequired} onChange={(e) => setNewField({ ...newField, isRequired: e.target.checked })} />
+            Required
+          </label>
+          {newField.fieldType === 'text' && (
+            <>
+              <input className="form-control" type="number" placeholder="Min Length" value={newField.minLength} onChange={(e) => setNewField({ ...newField, minLength: e.target.value })} />
+              <input className="form-control" type="number" placeholder="Max Length" value={newField.maxLength} onChange={(e) => setNewField({ ...newField, maxLength: e.target.value })} />
+            </>
           )}
-        </Droppable>
-      </DragDropContext>
-      <button className="submit-btn" onClick={handleSubmit}>Submit Form</button>
+          {['radio', 'multiple_choice'].includes(newField.fieldType) && (
+            <input className="form-control" type="text" placeholder="Choices (comma separated)" value={newField.choices} onChange={(e) => setNewField({ ...newField, choices: e.target.value })} />
+          )}
+          <button className="add-btn" onClick={addField}>Add Field</button>
+        </div>
+        <div className="form-preview">
+          {fields.map((field, index) => (
+            <div key={index} className="field-preview">
+              <div>Label: {field.label}</div>
+              <div>Name: {field.name}</div>
+              <div>Placeholder: {field.placeholder}</div>
+              <button className="remove-btn" onClick={() => removeField(index)}>X</button>
+            </div>
+          ))}
+        </div>
+      </div>
+      <br></br>
+      <center><button className="submit-btn" onClick={handleSubmit}>Submit Form</button></center>
     </div>
   );
 };

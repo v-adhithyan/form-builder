@@ -12,7 +12,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<IndexPage />} />
+        <Route path="/" element={<FormList />} />
         <Route path="/form/build/:id" element={<FormBuilder />} />
         <Route path="/form" element={<FormList />} />
         <Route path="/form/new" element={<NewForm />} />

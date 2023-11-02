@@ -28,17 +28,19 @@ const FormList = () => {
   };
 
   return (
-    <div>
-      <h1>Forms</h1>
-      <Link to="/form/new">Add New Form</Link>
+    <div style={{ margin: '20px' }}>
+      <h1 style={{ textAlign: 'center' }}>Forms</h1>
+      <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+        <Link to="/form/new" style={{ textDecoration: 'none', color: 'blue' }}>Add New Form</Link>
+      </div>
       {forms.map(form => (
-        <div key={form.id}>
+        <div key={form.id} style={{ border: '1px solid #ddd', padding: '15px', marginBottom: '10px', borderRadius: '5px' }}>
           <h2>{form.name}</h2>
           <p>{form.description}</p>
-          <p>{form.uuid}</p>
-          <Link to={`/form/build/${form.id}`}>Build</Link>
-          <br></br>
-          <Link to={`/public/form/${form.uuid}`}>Submit Form Data</Link>
+          <p><Link to={`/public/form/${form.uuid}`} style={{ textDecoration: 'none', color: 'blue' }}>{form.uuid}</Link></p>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
+            <Link to={`/form/build/${form.id}`} style={{ textDecoration: 'none', color: 'green' }}>Build</Link>
+          </div>
         </div>
       ))}
     </div>
