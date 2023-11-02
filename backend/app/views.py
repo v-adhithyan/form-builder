@@ -62,6 +62,7 @@ def view_form_data(request, uuid):
         keys = page_obj.object_list[0].keys()
 
     context = {
+        'title': saved_data[0].form.name,
         'page_obj': page_obj,
         'keys': keys,
     }
