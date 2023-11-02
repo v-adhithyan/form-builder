@@ -40,4 +40,4 @@ Note: Please watch demo video before reading this section.
 - In react the form builder page will not list form fields when we click build for a form that already has form fields added. Adding new fields append to the existing fields. I am not fetching current form fields list which is the reason for this behaviour.
 - Editing a form field is not supported in build form fields page.
 - 404 will not be thrown if we view a form in public mode that has no form fields added.
-
+- Test cases are not written because of time constraints. Usually I will be doing tdd.
