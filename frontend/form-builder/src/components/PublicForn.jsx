@@ -10,6 +10,7 @@ const PublicForm = () => {
   const navigate = useNavigate();
   const [formInfo, setFormInfo] = useState({ name: '', description: '', fields: [] });
   const [formData, setFormData] = useState({});
+  const [formErrors, setFormErrors] = useState({}); // State to keep track of errors
 
   useEffect(() => {
     const fetchFormFields = async () => {
@@ -30,6 +31,7 @@ const PublicForm = () => {
 
   const handleChange = (name, value) => {
     setFormData({ ...formData, [name]: value });
+    setFormErrors({ ...formErrors, [name]: '' }); // Clear error for this field
   };
 
   const handleSubmit = async (e) => {
@@ -39,8 +41,12 @@ const PublicForm = () => {
       alert('Form submitted successfully');
       window.location.href = '/';
     } catch (error) {
-      console.error('Error submitting form:', error);
-      alert('Failed to submit form');
+      if (error.response && error.response.status === 422) {
+        setFormErrors(error.response.data); // Assuming the errors are in the response data
+      } else {
+        console.error('Error submitting form:', error);
+        alert('Failed to submit form');
+      }
     }
   };
 
@@ -56,6 +62,7 @@ const PublicForm = () => {
               {field.label}
               {field.is_required && <span className="asterisk">*</span>}
             </label>
+            {formErrors[field.name] && <p className="error-message">{formErrors[field.name]}</p>} {/* Display error message */}
             {field.field_type === 'ss' ? (
               field.choices.split(',').map((choice, index) => (
                 <div key={index}>
